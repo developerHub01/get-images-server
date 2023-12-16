@@ -3,12 +3,21 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const chrome = require("chrome-aws-lambda");
 app.use(express.json());
+const chrome = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer-core");
 
-let puppeteer;
-
-puppeteer = process.env.AWS_LAMBDA_FUNCTION_VERSION
-  ? require("puppeteer-core")
-  : require("puppeteer");
+const options = {
+  args: [
+    ...chrome.args,
+    "--hide-scrollbars",
+    "--disable-web-security",
+    "--font-render-hinting=none",
+  ],
+  defaultViewport: chrome.defaultViewport,
+  executablePath: await chrome.executablePath,
+  headless: true,
+  ignoreHTTPSErrors: true,
+};
 
 app.get("/", async (req, res) => {
   res.send("GET IMAGES ===================");
@@ -21,15 +30,7 @@ app.get("/fetchData", async (req, res) => {
   const { url } = req.query;
 
   try {
-    const browser = await puppeteer.launch(
-      process.env.AWS_LAMBDA_FUNCTION_VERSION && {
-        args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-        defaultViewport: chrome.defaultViewport,
-        executablePath: await chrome.executablePath,
-        headless: true,
-        ignoreHTTPSErrors: true,
-      }
-    );
+    const browser = await puppeteer.launch(options);
     const page = await browser.newPage();
     await page.goto(url);
 
