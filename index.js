@@ -4,17 +4,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-let chrome = {};
 let puppeteer;
 let options = {};
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
+  const chrome = require("chrome-aws-lambda");
+  console.log(chrome);
   puppeteer = require("puppeteer-core");
   options = {
-    args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-    defaultViewPort: chrome.defaultViewPort,
-    executablePath: await chrome.executablePath,
+    args: chrome.args,
+    defaultViewport: chrome.defaultViewport,
     headless: true,
     ignoreHTTPSErrors: true,
   };
@@ -42,8 +41,6 @@ app.get("/fetchData", async (req, res) => {
     );
     images = [...new Set(images)];
     await browser.close();
-
-    console.log(images);
     res.send(images);
   } catch (error) {
     console.error(error);
