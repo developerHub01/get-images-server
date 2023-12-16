@@ -7,19 +7,19 @@ app.use(express.json());
 let puppeteer;
 let options = {};
 
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  const chrome = require("chrome-aws-lambda");
-  console.log(chrome);
-  puppeteer = require("puppeteer-core");
-  options = {
-    args: chrome.args,
-    defaultViewport: chrome.defaultViewport,
-    headless: true,
-    ignoreHTTPSErrors: true,
-  };
-} else {
+// if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+//   const chrome = require("chrome-aws-lambda");
+//   puppeteer = require("puppeteer-core");
+//   options = {
+//     args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+//     defaultViewport: chrome.defaultViewport,
+//     executablePath: await chrome.executablePath,
+//     headless: true,
+//     ignoreHTTPSErrors: true,
+//   };
+// } else {
   puppeteer = require("puppeteer");
-}
+// }
 
 app.get("/", async (req, res) => {
   res.send("GET IMAGES ===================");
