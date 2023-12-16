@@ -8,6 +8,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+app.get("/", async (req, res) => {
+  res.send("GET IMAGES ===================");
+});
+app.get("/health", async (req, res) => {
+  res.send("server running successfully");
+});
+
 app.get("/fetchData", async (req, res) => {
   const { url } = req.query;
 
