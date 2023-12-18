@@ -1,23 +1,12 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const PORT = process.env.PORT || 3000;
-const chrome = require("chrome-aws-lambda");
-app.use(express.json());
-const chrome = require("chrome-aws-lambda");
-const puppeteer = require("puppeteer-core");
 
-const options = {
-  args: [
-    ...chrome.args,
-    "--hide-scrollbars",
-    "--disable-web-security",
-    "--font-render-hinting=none",
-  ],
-  defaultViewport: chrome.defaultViewport,
-  executablePath: await chrome.executablePath,
-  headless: true,
-  ignoreHTTPSErrors: true,
-};
+const puppeteer = require("puppeteer-core");
+app.use(express.json());
+
+console.log(process.env.BROWSERLESS_ACCESS_TOKEN);
 
 app.get("/", async (req, res) => {
   res.send("GET IMAGES ===================");
@@ -30,7 +19,9 @@ app.get("/fetchData", async (req, res) => {
   const { url } = req.query;
 
   try {
-    const browser = await puppeteer.launch(options);
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_ACCESS_TOKEN}`,
+    });
     const page = await browser.newPage();
     await page.goto(url);
 
@@ -39,7 +30,7 @@ app.get("/fetchData", async (req, res) => {
     );
     images = [...new Set(images)];
     await browser.close();
-    res.send(images);
+    res.json({ data: images });
   } catch (error) {
     console.error(error);
     return null;
