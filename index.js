@@ -7,11 +7,11 @@ const PORT = process.env.PORT || 3000;
 const puppeteer = require("puppeteer-core");
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://get-images-server.vercel.app"],
+    origin: ["http://localhost:5173", "https://snap-the-page.vercel.app"],
     credentials: true,
   })
 );
-app.use(express.json());
+https: app.use(express.json());
 
 app.get("/", async (req, res) => {
   res.send("GET IMAGES ===================");
