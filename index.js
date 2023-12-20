@@ -45,7 +45,7 @@ app.get("/fetchData", async (req, res) => {
     );
     images = [...new Set(images)];
     await browser.close();
-    res.json({ data: images });
+    res.json([...images]);
   } catch (error) {
     console.error(error);
     return null;
