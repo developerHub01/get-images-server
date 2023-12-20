@@ -4,15 +4,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 
 const puppeteer = require("puppeteer-core");
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://get-images-server.vercel.app"],
-    credentials: true,
-  })
-);
 app.use(express.json());
-
-console.log(process.env.BROWSERLESS_ACCESS_TOKEN);
 
 app.get("/", async (req, res) => {
   res.send("GET IMAGES ===================");
