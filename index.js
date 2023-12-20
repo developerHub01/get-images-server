@@ -26,7 +26,17 @@ app.get("/fetchData", async (req, res) => {
     await page.goto(url);
 
     let images = await page.$$eval("img", (element) =>
-      element.map((item) => item.src)
+      element
+        .map((item) => item.src)
+        .filter((item) => {
+          const imgSrcArr = item?.split(".");
+          if (
+            ["jpg", "png", "gif", "bmp"].includes(
+              imgSrcArr[imgSrcArr?.length - 1]
+            )
+          )
+            return item;
+        })
     );
     images = [...new Set(images)];
     await browser.close();
